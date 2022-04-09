@@ -19,9 +19,24 @@ package:
     - '!.gitignore'
 
 functions:
-  pre-signup:
-    handler: ./src/pre-signup.handler
+  pre_signup:
+    handler: ./src/pre_signup.handler
     events:
       - cognitoUserPool:
           pool: ${env:COGNITO_USER_POOL_NAME}
           trigger: PreSignUp
+          existing: true
+    iam:
+      role:
+        statements:
+          - Effect : 'Allow'
+            Action: 'cognito-idp:ListUsers'
+            Resource: ${env:COGNITO_USER_POOL_ARN}
+
+  custom_message:
+    handler: ./src/custom_message.handler
+    events:
+      - cognitoUserPool:
+          pool: ${env:COGNITO_USER_POOL_NAME}
+          trigger: CustomMessage
+          existing: true
