@@ -1,0 +1,17 @@
+{
+  "name": "cognito-triggers",
+  "version": "1.0.0",
+  "description": "Serverless framework project that contains aws cognito triggers",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "author": "Kelvin Clement Mwinuka",
+  "license": "ISC",
+  "dependencies": {
+    "serverless-dotenv-plugin": "^3.12.2"
+  },
+  "devDependencies": {
+    "serverless-offline": "^8.5.0"
+  }
+}
