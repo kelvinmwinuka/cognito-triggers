@@ -1,16 +1,24 @@
 'use strict';
-require("dotenv").config({})
+require("dotenv").config({});
 
-module.exports.handler = async (event, context, callback) => {xwxw
-  return {
-    statusCode: 200,
-    body: JSON.stringify(
-      {
-        message: 'Go Serverless v1.0! Your function executed successfully!',
-        input: event,
-      },
-      null,
-      2
-    ),
-  };
+const { COGNITO_USER_POOL_ID } = process.env;
+
+const {
+  CognitoIdentityProviderClient,
+  ListUsersCommand
+} = require("@aws-sdk/client-cognito-identity-provider");
+
+module.exports.handler = async (event, context, callback) => {
+  const client = new CognitoIdentityProviderClient();
+  
+  const listUsersCommand = new ListUsersCommand({
+    UserPoolId: COGNITO_USER_POOL_ID,
+    Filter: `email = "${event.request.userAttributes.email}"`
+  });
+
+  const result = await client.send(listUsersCommand);
+
+  if (result.Users.length > 0) return callback(new Error("Email is already in use."), event);
+
+  callback(null, event);
 };

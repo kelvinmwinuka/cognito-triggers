@@ -12,7 +12,14 @@ provider:
   name: aws
   runtime: nodejs14.x
   stage: ${opt:stage, 'dev'}
-  region: ${env:AWS_REGION}
+  region: ${env:REGION}
+  profile: default
+  iam:
+    role:
+      statements:
+        - Effect: 'Allow'
+          Action: 'cognito-idp:ListUsers'
+          Resource: '${env:COGNITO_USER_POOL_ARN}'
 
 package:
   patterns:
@@ -26,12 +33,6 @@ functions:
           pool: ${env:COGNITO_USER_POOL_NAME}
           trigger: PreSignUp
           existing: true
-    iam:
-      role:
-        statements:
-          - Effect : 'Allow'
-            Action: 'cognito-idp:ListUsers'
-            Resource: ${env:COGNITO_USER_POOL_ARN}
 
   custom_message:
     handler: ./src/custom_message.handler

@@ -9,6 +9,7 @@
   "author": "Kelvin Clement Mwinuka",
   "license": "ISC",
   "dependencies": {
+    "@aws-sdk/client-cognito-identity-provider": "^3.67.0",
     "serverless-dotenv-plugin": "^3.12.2"
   },
   "devDependencies": {
