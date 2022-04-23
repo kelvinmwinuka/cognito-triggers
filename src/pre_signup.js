@@ -10,6 +10,7 @@ const {
 
 module.exports.handler = async (event, context, callback) => {
   const client = new CognitoIdentityProviderClient();
+  console.log(event.request)
   
   const listUsersCommand = new ListUsersCommand({
     UserPoolId: COGNITO_USER_POOL_ID,
@@ -19,6 +20,13 @@ module.exports.handler = async (event, context, callback) => {
   const result = await client.send(listUsersCommand);
 
   if (result.Users.length > 0) return callback(new Error("Email is already in use."), event);
+
+  // Verify user's email address if it's already verified with Google.
+  if (event.request.userAttributes['custom:RegistrationMethod'] === "google") {
+    let userEmailVerified = event.request.clientMetadata['EmailVerified'] === 'true'
+    event.response.autoVerifyEmail = userEmailVerified
+    event.response.autoConfirmUser = userEmailVerified
+  }
 
   callback(null, event);
 };
